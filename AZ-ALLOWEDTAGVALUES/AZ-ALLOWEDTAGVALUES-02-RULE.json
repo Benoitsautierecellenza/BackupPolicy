@@ -1,0 +1,19 @@
+{
+  "if": {
+    "allOf": [
+      {
+        "not":{            
+          "field": "[concat('tags[', parameters('BackupPolicyTagName'), ']')]",
+          "in": "[parameters('BackupPolicyTagAllowedValues')]"
+        }
+      },
+      {
+        "field": "type",
+        "equals":  "Microsoft.Compute/virtualMachines"  
+      }
+    ]
+  },
+  "then": {
+    "effect": "deny"
+  } 
+}
