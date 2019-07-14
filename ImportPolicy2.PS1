@@ -2,8 +2,8 @@
 # Import 1 OK
 #
 [String]$ManagementGroupName = "MGMT01"
-[String]$PolicyDefinitionFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/AZ-ALLOWEDTAGVALUES/AZ-ALLOWEDTAGVALUES-02-RULE.json"
-[String]$PolicyParameterFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/AZ-ALLOWEDTAGVALUES/AZ-ALLOWEDTAGVALUES-02-PARAMETERS.json"
+[String]$PolicyDefinitionFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/Policies/AZ-ALLOWEDTAGVALUES/AZ-ALLOWEDTAGVALUES-02-RULE.json"
+[String]$PolicyParameterFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/Policies/AZ-ALLOWEDTAGVALUES/AZ-ALLOWEDTAGVALUES-02-PARAMETERS.json"
 [String]$PolicyName = "AllowedValues4BackupPolicy"
 New-AzPolicyDefinition -Name $PolicyName `
 -DisplayName $PolicyName `
@@ -12,7 +12,7 @@ New-AzPolicyDefinition -Name $PolicyName `
 -ManagementGroupName $ManagementGroupName `
 -Mode All
 #
-# Assign 1 OK (manque la localisation)
+# Assign 1 OK 
 #
 [String]$ManagementGroupName = "MGMT01"
 [String]$SubscriptionID = (Get-Azcontext).Subscription.id
@@ -21,7 +21,6 @@ New-AzPolicyDefinition -Name $PolicyName `
 [String]$PolicyName = "AllowedValues4BackupPolicy"
 [String]$PolicyAssignName = "MGMT01-VM-P1"
 [array]$AllowedValues = @("Yes", "No")
-#[String]$Scope = "/providers/Microsoft.Management/managementGroups/$ManagementGroupName"
 [String]$Scope = "/subscriptions/$SubscriptionID"
 $PolicyDefinition = Get-AzPolicyDefinition  -ManagementGroupName $ManagementGroupName -Name $PolicyName
 $AssignParameters = @{
@@ -36,8 +35,8 @@ New-AzPolicyAssignment -Name $PolicyAssignname `
 # Import 2 OK
 #
 [String]$ManagementGroupName = "MGMT01"
-[String]$PolicyDefinitionFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/AZ-DEFAULTTAG/AZ-DEFAULTTAG-01-RULE.json"
-[String]$PolicyParameterFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/AZ-DEFAULTTAG/AZ-DEFAULTTAG-01-PARAMETERS.json"
+[String]$PolicyDefinitionFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/Policies/AZ-DEFAULTTAG/AZ-DEFAULTTAG-01-RULE.json"
+[String]$PolicyParameterFileURI = "https://raw.githubusercontent.com/Benoitsautierecellenza/BackupPolicy/master/Policies/AZ-DEFAULTTAG/AZ-DEFAULTTAG-01-PARAMETERS.json"
 [String]$PolicyName = "DefaultValue4BackupPolicy"
 New-AzPolicyDefinition -Name $PolicyName `
 -DisplayName $PolicyName `
@@ -45,25 +44,6 @@ New-AzPolicyDefinition -Name $PolicyName `
 -Parameter $PolicyParameterFileURI `
 -ManagementGroupName $ManagementGroupName `
 -Mode All
-#
-# Assign 2 OK (ManagementGroup OLD)
-#
-[String]$ManagementGroupName = "MGMT01"
-[String]$BackupPolicyTagName = "BackupPolicy"
-[String]$DefaultTagValue = "No"
-[String]$PolicyName = "DefaultValue4BackupPolicy"
-[String]$PolicyAssignName = "MGMT01-VM-P2"
-[String]$AllowedValues = "Yes"
-[String]$Scope = "/providers/Microsoft.Management/managementGroups/$ManagementGroupName"
-$PolicyDefinition = Get-AzPolicyDefinition  -ManagementGroupName $ManagementGroupName -Name $PolicyName
-$AssignParameters = @{
-    'BackupPolicyTagName' = $BackupPolicyTagName;
-    'DefaultTagValue'=($AllowedValues)
-}
-New-AzPolicyAssignment -Name $PolicyAssignname `
--PolicyDefinition $PolicyDefinition `
--Scope $Scope `
--PolicyParameterObject $AssignParameters
 
 
 
@@ -71,6 +51,7 @@ New-AzPolicyAssignment -Name $PolicyAssignname `
 # Assign 2 OK (Souscription)
 #
 $SubscriptionID = (Get-AzContext).Subscription.id 
+[String]$ManagementGroupName = "MGMT01"
 [String]$BackupPolicyTagName = "BackupPolicy"
 [String]$DefaultTagValue = "No"
 [String]$PolicyName = "DefaultValue4BackupPolicy"
@@ -122,3 +103,5 @@ Register-AzAutomationScheduledRunbook -ResourceGroupName $ResourceGroupName `
     -AutomationAccountName $AutomationAccountName `
     -RunbookName "AutomaticBackupVMS-OFF" `
     -ScheduleName $ScheduleName
+
+
