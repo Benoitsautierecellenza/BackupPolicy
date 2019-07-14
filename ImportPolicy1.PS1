@@ -85,3 +85,39 @@ New-AzPolicyAssignment -Name $PolicyAssignname `
 -PolicyDefinition $PolicyDefinition `
 -Scope $Scope `
 -PolicyParameterObject $AssignParameters
+#
+# Import Runbooks
+#
+[String]$ResourceGroupName = "Management"
+[String]$AutomationAccountName = "ManagementAutomation"
+Import-AzAutomationRunbook -ResourceGroupName $ResourceGroupName `
+    -AutomationAccountName $AutomationAccountName `
+    -Path "C:\localgit\BackupPolicy\Runbooks\AutomaticBackupVMS-ON.PS1" `
+    -Type PowerShell `
+    -Published 
+Import-AzAutomationRunbook -ResourceGroupName $ResourceGroupName `
+    -AutomationAccountName $AutomationAccountName `
+    -Path "C:\localgit\BackupPolicy\Runbooks\AutomaticBackupVMS-OFF.PS1" `
+    -Type PowerShell `
+    -Published 
+#
+# Create Schedule
+#
+[String]$ScheduleName = "FOUR_HOURS"
+[DateTime]$StartTime = ((Get-date).date).AddDays(1)
+[Int]$SchedulePeriodInHours = 4
+[String]$TimeZoneName =  ([System.TimeZoneInfo]::Local).Id
+New-AzAutomationSchedule -ResourceGroupName $ResourceGroupName `
+    -AutomationAccountName $AutomationAccountName `
+    -Name $ScheduleName `
+    -StartTime $StartTime `
+    -HourInterval $SchedulePeriodInHours `
+    -TimeZone $TimeZoneName
+Register-AzAutomationScheduledRunbook -ResourceGroupName $ResourceGroupName `
+    -AutomationAccountName $AutomationAccountName `
+    -RunbookName "AutomaticBackupVMS-ON" `
+    -ScheduleName $ScheduleName
+    Register-AzAutomationScheduledRunbook -ResourceGroupName $ResourceGroupName `
+    -AutomationAccountName $AutomationAccountName `
+    -RunbookName "AutomaticBackupVMS-OFF" `
+    -ScheduleName $ScheduleName
