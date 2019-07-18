@@ -5,7 +5,7 @@
 # Raise Alert if backup registration fail
 #
 [Int]$CountAddedVms = 0
-[Bool]$Automation_Flag = $False
+[Bool]$Automation_Flag = $True
 If($Automation_Flag -eq $True)
 {
     $connectionName = "AzureRunAsConnection"
